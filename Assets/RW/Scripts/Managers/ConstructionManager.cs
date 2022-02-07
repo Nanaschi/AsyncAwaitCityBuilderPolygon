@@ -47,6 +47,8 @@ namespace RayWenderlich.WenderlichTopia
                 Destroy(placementStructure);
                 var roadProperties = roadBuildPropertiesContainer.roadBuildProperties;
                 var buildRoadTask = BuildRoadAsync(roadProperties, buildPosition);
+                await buildRoadTask;
+                uiManager.NewStructureComplete(roadProperties.roadCost, buildPosition);
             }
             
             else if (placementStructure.TryGetComponent(out HouseBuildPropertiesContainer houseBuildPropertiesContainer))
@@ -60,6 +62,9 @@ namespace RayWenderlich.WenderlichTopia
         private async Task BuildRoadAsync(RoadBuildProperties roadProperties, Vector3 buildPosition)
         {
             var constructionTile = Instantiate(constructionTilePrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
+            await Task.Delay(2500);
+            Destroy(constructionTile);
+            Instantiate(roadProperties.completedRoadPrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
 
         }
     }
