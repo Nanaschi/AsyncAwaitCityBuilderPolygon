@@ -80,7 +80,10 @@ namespace RayWenderlich.WenderlichTopia
             await Task.WhenAll(buildRoof, buildFence);
             Task<int> finalizeHouse = BuildHousePartAsync(houseBuildProperties, houseBuildProperties.completedHousePrefab, buildPosition);
             await finalizeHouse;
-            return 100;
+            Destroy(constructionTile);
+
+            var totalHouseCost = buildFrame.Result + buildRoof.Result + buildFence.Result + finalizeHouse.Result;
+            return totalHouseCost;
         }
         
         private async Task<int> BuildHousePartAsync(HouseBuildProperties houseBuildProperties, GameObject housePartPrefab, Vector3 buildPosition)
