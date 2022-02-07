@@ -39,20 +39,16 @@ namespace RayWenderlich.WenderlichTopia
         public GameObject constructionTilePrefab;
         public UiManager uiManager;
         public Transform levelGeometryContainer;
-        
-        private void Start()
-        {
-            
-        }
 
-        public void BuildStructure(GameObject placementStructure, Vector3 buildPosition)
+        public async void BuildStructure(GameObject placementStructure, Vector3 buildPosition)
         {
             if (placementStructure.TryGetComponent(out RoadBuildPropertiesContainer roadBuildPropertiesContainer))
             {
                 Destroy(placementStructure);
                 var roadProperties = roadBuildPropertiesContainer.roadBuildProperties;
-
+                var buildRoadTask = BuildRoadAsync(roadProperties, buildPosition);
             }
+            
             else if (placementStructure.TryGetComponent(out HouseBuildPropertiesContainer houseBuildPropertiesContainer))
             {
                 Destroy(placementStructure); 
@@ -60,14 +56,10 @@ namespace RayWenderlich.WenderlichTopia
                 
             }
         }
-
-        private void Update()
+        
+        private async Task BuildRoadAsync(RoadBuildProperties roadProperties, Vector3 buildPosition)
         {
-            
-        }
-
-        private void OnDisable()
-        {
+            var constructionTile = Instantiate(constructionTilePrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
 
         }
     }
