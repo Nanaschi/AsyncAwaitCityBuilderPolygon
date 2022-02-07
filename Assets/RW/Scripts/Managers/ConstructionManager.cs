@@ -73,7 +73,13 @@ namespace RayWenderlich.WenderlichTopia
         private async Task<int> BuildHouseAsync(HouseBuildProperties houseBuildProperties, Vector3 buildPosition)
         {
             var constructionTile = Instantiate(constructionTilePrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
-            await Task.Delay(1000);
+            Task<int> buildFrame = BuildHousePartAsync(houseBuildProperties, houseBuildProperties.completedFramePrefab, buildPosition);
+            await buildFrame;
+            Task<int> buildRoof = BuildHousePartAsync(houseBuildProperties, houseBuildProperties.completedRoofPrefab, buildPosition);
+            Task<int> buildFence = BuildHousePartAsync(houseBuildProperties, houseBuildProperties.completedFencePrefab, buildPosition);
+            await Task.WhenAll(buildRoof, buildFence);
+            Task<int> finalizeHouse = BuildHousePartAsync(houseBuildProperties, houseBuildProperties.completedHousePrefab, buildPosition);
+            await finalizeHouse;
             return 100;
         }
         
@@ -83,6 +89,7 @@ namespace RayWenderlich.WenderlichTopia
             await Task.Delay(constructionTime);
             Instantiate(housePartPrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
             var taskCost = constructionTime * houseBuildProperties.wage;
+
             return taskCost;
         }
 
