@@ -55,7 +55,10 @@ namespace RayWenderlich.WenderlichTopia
             {
                 Destroy(placementStructure); 
                 var houseProperties = houseBuildPropertiesContainer.houseBuildProperties;
-                
+                var buildHouseTask = BuildHouseAsync(houseProperties, buildPosition);
+                await buildHouseTask; 
+                var houseCost = buildHouseTask.Result;
+                uiManager.NewStructureComplete(houseCost, buildPosition);
             }
         }
         
@@ -66,6 +69,12 @@ namespace RayWenderlich.WenderlichTopia
             Destroy(constructionTile);
             Instantiate(roadProperties.completedRoadPrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
 
+        }
+        private async Task<int> BuildHouseAsync(HouseBuildProperties houseBuildProperties, Vector3 buildPosition)
+        {
+            var constructionTile = Instantiate(constructionTilePrefab, buildPosition, Quaternion.identity, levelGeometryContainer);
+            await Task.Delay(1000);
+            return 100;
         }
     }
 }
