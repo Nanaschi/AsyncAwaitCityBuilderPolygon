@@ -61,6 +61,8 @@ namespace RayWenderlich.WenderlichTopia
 
         public async void BuildStructure(GameObject placementStructure, Vector3 buildPosition)
         {
+            
+    
             var cancellationToken = cancellationTokenSource.Token;
             if (placementStructure.TryGetComponent(out RoadBuildPropertiesContainer roadBuildPropertiesContainer))
             {
@@ -76,9 +78,17 @@ namespace RayWenderlich.WenderlichTopia
                 Destroy(placementStructure); 
                 var houseProperties = houseBuildPropertiesContainer.houseBuildProperties;
                 var buildHouseTask = BuildHouseAsync(houseProperties, buildPosition, cancellationToken);
-                await buildHouseTask; 
-                var houseCost = buildHouseTask.Result;
-                uiManager.NewStructureComplete(houseCost, buildPosition);
+
+                try
+                {
+                    await buildHouseTask;
+                    var houseCost = buildHouseTask.Result;
+                    uiManager.NewStructureComplete(houseCost, buildPosition);
+                }
+                catch
+                {
+                    Debug.LogWarning("Building House Cancelled");
+                }
             }
         }
         
